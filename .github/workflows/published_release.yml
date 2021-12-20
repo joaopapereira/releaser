@@ -114,7 +114,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: homebrew-formula
-          path: ./${{ context.payload.client_payload.toolName }}.rb
+          path: ./${ context.payload.client_payload.toolName }.rb
   release-on-homebrew:
     runs-on: ubuntu-latest
     needs: prepare-homebrew-file
