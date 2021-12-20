@@ -7,9 +7,9 @@ on:
       owner:
         required: true
         type: string
-      repo:
-        required: true
-        type: string
+#      repo:
+#        required: true
+#        type: string
       tagName:
         required: true
         type: string
@@ -33,13 +33,15 @@ jobs:
           result-encoding: string
           script: |
             var crypto = require('crypto');
-            const { owner, repo } = context.repo;
+#            const { owner, repo } = context.repo;
+            const owner = inputs.repo.split("/")[0]
+            const repo = inputs.repo.split("/")[1]
             
             // https://docs.github.com/en/rest/reference/repos#list-releases
             // https://octokit.github.io/rest.js/v18#repos-list-releases
             var releases = await github.repos.listReleases({
-              owner: inputs.owner,
-              repo: inputs.repo
+              owner: owner,
+              repo: repo
             });
             
             var crypto = require('crypto')
@@ -51,7 +53,7 @@ jobs:
             for (const r of releases["data"]) {
               if (r.draft && `${r.tag_name}` == "${{ tagName }}") {
                 for (const asset of r.assets) {
-                  var release_asset = await github.repos.getReleaseAsset({ headers: {accept: `application/octet-stream`}, accept: `application/octet-stream`, owner: inputs.owner, repo: inputs.repo, asset_id: asset.id });
+                  var release_asset = await github.repos.getReleaseAsset({ headers: {accept: `application/octet-stream`}, accept: `application/octet-stream`, owner: owner, repo: repo, asset_id: asset.id });
                   const hash = crypto.createHash('sha256');
             
                   let http_promise = new Promise((resolve, reject) => {

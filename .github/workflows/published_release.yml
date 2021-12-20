@@ -3,11 +3,19 @@ name: published_release
 on: [repository_dispatch]
 
 jobs:
+  process-release-information:
+    uses: joaopapereira/releaser/.github/workflows/get-assets-sha@main
+    with:
+      toolName: tool1
+      repo: ${{ github.event.client_payload.repo }}
+      tagName: ${{ github.event.client_payload.tagName }}
   release-on-homebrew:
     runs-on: ubuntu-latest
+    needs: process-release-information
     steps:
       - name: Publish
         run: |
+          echo ${{ needs.process-release-information.outputs.result }}
           echo ${{ github.event.client_payload.tagName }}
           echo ${{ github.event.client_payload.owner }}
           echo ${{ github.event.client_payload.repo }}
