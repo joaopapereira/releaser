@@ -52,6 +52,7 @@ jobs:
                   });
                   await http_promise;
                 }
+                break
               }
             }
             console.log(checksums)
@@ -67,7 +68,7 @@ jobs:
             `
             
             for (const [key, value] of Object.entries(checksums)) {
-              if (key.indexOf(toolName) != -1) {
+              if (key.indexOf(context.payload.client_payload.toolName) != -1) {
               keyParts = key.split("-")
               result += `
               - os: ${keyParts[1]}
