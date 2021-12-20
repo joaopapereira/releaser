@@ -106,7 +106,7 @@ jobs:
         run: |
           set -e -x
           curl -L https://carvel.dev/install.sh | bash
-          filename=${{ context.payload.client_payload.toolName }}
+          filename=${ context.payload.client_payload.toolName }
           
           ./scripts/generate_homebrew_formula.sh ./tmp/release.yml > ./"$filename".rb
   
@@ -132,5 +132,5 @@ jobs:
           name: homebrew-formula
       - name: View homebrew formula
         run: |
-          filename=${{ context.payload.client_payload.toolName }}
-          cat $filename
+          filename=${ context.payload.client_payload.toolName }
+          cat ./"$filename".rb
