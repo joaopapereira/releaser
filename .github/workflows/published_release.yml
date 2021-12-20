@@ -8,4 +8,6 @@ jobs:
     steps:
       - name: Publish
         run: |
-          echo ${{ github.event.client_payload }}
+          echo ${{ github.event.client_payload.tagName }}
+          echo ${{ github.event.client_payload.owner }}
+          echo ${{ github.event.client_payload.repo }}
