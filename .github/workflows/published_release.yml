@@ -13,7 +13,7 @@ jobs:
           result-encoding: string
           script: |
             var crypto = require('crypto');
-            console.log(context)
+
             const owner = ${{ context.payload.client_payload.repo }}.split("/")[0]
             const repo = ${{ context.payload.client_payload.repo }}.split("/")[1]
             
