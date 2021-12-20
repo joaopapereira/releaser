@@ -13,8 +13,9 @@ jobs:
           result-encoding: string
           script: |
             var crypto = require('crypto');
-            const owner =  github.event.client_payload.repo.repo.split("/")[0]
-            const repo =  github.event.client_payload.repo.repo.split("/")[1]
+            console.log(toJSON(context))
+            const owner = github.event.client_payload.repo.repo.split("/")[0]
+            const repo = github.event.client_payload.repo.repo.split("/")[1]
             
             // https://docs.github.com/en/rest/reference/repos#list-releases
             // https://octokit.github.io/rest.js/v18#repos-list-releases
