@@ -4,7 +4,7 @@ on:
       toolName:
         required: true
         type: string
-      owner:
+      repo:
         required: true
         type: string
       tagName:
