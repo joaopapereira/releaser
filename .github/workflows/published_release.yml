@@ -103,11 +103,10 @@ jobs:
           name: ytt-data-values-for-release
           path: ./tmp/release.yml
       - name: Generate Homebrew File
-        env:
-          toolName: ${{ context.payload.client_payload.toolName }}
         run: |
           set -e -x
           curl -L https://carvel.dev/install.sh | bash
+          filename=${{ context.payload.client_payload.toolName }}
           
           ./scripts/generate_homebrew_formula.sh ./tmp/release.yml > ./"$filename".rb
   
@@ -132,7 +131,6 @@ jobs:
         with:
           name: homebrew-formula
       - name: View homebrew formula
-        env:
-          filename: ./${{ context.payload.client_payload.toolName }}.rb
         run: |
-          cat ${{ env.filename }}
+          filename=${{ context.payload.client_payload.toolName }}
+          cat $filename
