@@ -5,9 +5,11 @@ on: [repository_dispatch]
 jobs:
   process-release-information:
     runs-on: ubuntu-latest
+    outputs:
+      yttValuesFile: ${{ steps.get-checksums-from-release.outputs.result }}
     steps:
       - uses: actions/github-script@v5
-        id: get-checksums-from-draft-release
+        id: get-checksums-from-release
         if: startsWith(github.ref, 'refs/tags/') && ${{ !env.ACT }}
         with:
           result-encoding: string
@@ -86,7 +88,7 @@ jobs:
     steps:
       - name: Publish
         run: |
-          echo ${{ needs.process-release-information.outputs.result }}
+          echo ${{ needs.process-release-information.outputs.yttValuesFile }}
           echo ${{ github.event.client_payload.tagName }}
           echo ${{ github.event.client_payload.owner }}
           echo ${{ github.event.client_payload.repo }}
