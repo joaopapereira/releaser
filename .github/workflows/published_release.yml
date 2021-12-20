@@ -112,9 +112,9 @@ jobs:
           curl -L https://carvel.dev/install.sh | bash
           filename="./${{ github.event.client_payload.toolName }}.rb"
           
-          ./scripts/generate_homebrew_formula.sh ./tmp/release.yml > ./"$filename".rb
+          ./scripts/generate_homebrew_formula.sh ./tmp/release.yml > $filename
   
-          cat ./"$filename".rb
+          cat $filename
       - name: Upload Homebrew File
         uses: actions/upload-artifact@v2
         with:
@@ -136,5 +136,5 @@ jobs:
           name: homebrew-formula
       - name: View homebrew formula
         run: |
-          filename=${ github.event.client_payload.toolName }
-          cat ./"$filename".rb
+          filename="./${{ github.event.client_payload.toolName }}.rb"
+          cat $filename
