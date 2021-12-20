@@ -14,8 +14,8 @@ jobs:
           script: |
             var crypto = require('crypto');
             console.log(context)
-            const owner = github.event.client_payload.repo.repo.split("/")[0]
-            const repo = github.event.client_payload.repo.repo.split("/")[1]
+            const owner = context.payload.client_payload.repo.split("/")[0]
+            const repo = context.payload.client_payload.repo.split("/")[1]
             
             // https://docs.github.com/en/rest/reference/repos#list-releases
             // https://octokit.github.io/rest.js/v18#repos-list-releases
@@ -31,7 +31,7 @@ jobs:
             
             checksums = {}
             for (const r of releases["data"]) {
-              if (r.draft && `${r.tag_name}` == "${{ github.event.client_payload.tagName }}") {
+              if (r.draft && `${r.tag_name}` == "${{ context.payload.client_payload.tagName }}") {
                 for (const asset of r.assets) {
                   var release_asset = await github.repos.getReleaseAsset({ headers: {accept: `application/octet-stream`}, accept: `application/octet-stream`, owner: owner, repo: repo, asset_id: asset.id });
                   const hash = crypto.createHash('sha256');
