@@ -13,7 +13,7 @@ jobs:
           result-encoding: string
           script: |
             var crypto = require('crypto');
-            console.log(toJson(context))
+            console.log(context)
             const owner = github.event.client_payload.repo.repo.split("/")[0]
             const repo = github.event.client_payload.repo.repo.split("/")[1]
             
