@@ -14,8 +14,8 @@ jobs:
           script: |
             var crypto = require('crypto');
 
-            const owner = ${{ context.payload.client_payload.repo }}.split("/")[0]
-            const repo = ${{ context.payload.client_payload.repo }}.split("/")[1]
+            const owner = context.payload.client_payload.repo.split("/")[0]
+            const repo = context.payload.client_payload.repo.split("/")[1]
             
             // https://docs.github.com/en/rest/reference/repos#list-releases
             // https://octokit.github.io/rest.js/v18#repos-list-releases
