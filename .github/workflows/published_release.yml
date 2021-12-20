@@ -61,6 +61,7 @@ jobs:
             result = `
             #@data/values
             ---
+            product: ${context.payload.client_payload.toolName}
             version: ${context.payload.client_payload.tagName}
             github:
               url: ${githubURL}
@@ -69,7 +70,7 @@ jobs:
             
             for (const [key, value] of Object.entries(checksums)) {
               if (key.indexOf(context.payload.client_payload.toolName) != -1) {
-              keyParts = key.split("-")
+              keyParts = key.split('.')[0].split("-")
               result += `
               - os: ${keyParts[1]}
                 arch: ${keyParts[2]}
@@ -82,18 +83,52 @@ jobs:
             console.log(result)
             
             return result
-  release-on-homebrew:
+      - name: Create release file
+        run: |
+          cat <<EOF >release.yml
+          ${{ steps.get-checksums-from-release.outputs.result }}
+          EOF
+      - name: Upload Release information file
+        uses: actions/upload-artifact@v2
+        with:
+          name: ytt-data-values-for-release
+          path: ./release.yml
+  prepare-homebrew-file:
     runs-on: ubuntu-latest
     needs: process-release-information
     steps:
-      - name: Publish
+      - name: Download ytt data values file with release information
+        uses: actions/download-artifact@v2
+        with:
+          name: ytt-data-values-for-release
+          path: ./tmp/release.yml
+      - name: Generate Homebrew File
         run: |
-          echo ${{ github.event.client_payload.tagName }}
-          echo ${{ github.event.client_payload.owner }}
-          echo ${{ github.event.client_payload.repo }}
-          cat <<EOF >release.yml
-          ${{ needs.process-release-information.outputs.yttValuesFile }}
-          EOF
-          
-          cat release.yml
-          
+          set -e -x
+          curl -L https://carvel.dev/install.sh | bash
+  
+          ./scripts/generate_homebrew_formula.sh ./tmp/release.yml > ./${{ context.payload.client_payload.toolName }}.rb
+  
+          cat ./${{ context.payload.client_payload.toolName }}.rb
+      - name: Upload Homebrew File
+        uses: actions/upload-artifact@v2
+        with:
+          name: homebrew-formula
+          path: ./${{ context.payload.client_payload.toolName }}.rb
+  release-on-homebrew:
+    runs-on: ubuntu-latest
+    needs: prepare-homebrew-file
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          repository: vmware-tanzu/homebrew-carvel
+          ref: develop
+      - name: Download updated homebrew formula
+        uses: actions/download-artifact@v2
+        with:
+          name: homebrew-formula
+      - name: View homebrew formula
+        run: |
+          cat ./${{ context.payload.client_payload.toolName }}.rb
