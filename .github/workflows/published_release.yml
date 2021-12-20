@@ -6,7 +6,7 @@ jobs:
   process-release-information:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/github-script@v4
+      - uses: actions/github-script@v5
         id: get-checksums-from-draft-release
         if: startsWith(github.ref, 'refs/tags/') && ${{ !env.ACT }}
         with:
