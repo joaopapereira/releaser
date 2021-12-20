@@ -8,4 +8,4 @@ jobs:
     steps:
       - name: Publish
         run: |
-          echo github.event.inputs
+          echo ${{ github.event.client_payload }}
