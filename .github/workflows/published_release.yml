@@ -53,7 +53,7 @@ jobs:
             }
             console.log(checksums)
             
-            githubURL = `github.com/${inputs.owner}/${inputs.repo}`
+            githubURL = `github.com/${context.payload.client_payload.repo}`
             result = `
             #@data/values
             ---
