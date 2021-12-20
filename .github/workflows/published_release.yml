@@ -23,6 +23,8 @@ jobs:
               owner: owner,
               repo: repo
             });
+            console.log(`getting the releases from: ${owner}/${repo}`)
+            console.log(releases)
             
             var crypto = require('crypto')
             var fs = require('fs')
