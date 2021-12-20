@@ -1,0 +1,11 @@
+name: published_release
+
+on: [repository_dispatch]
+
+jobs:
+  release-on-homebrew:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish
+        run: |
+          echo github.event.inputs
