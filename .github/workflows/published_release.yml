@@ -4,7 +4,7 @@ on: [repository_dispatch]
 
 jobs:
   process-release-information:
-    uses: joaopapereira/releaser/.github/workflows/get-assets-sha@main
+    uses: joaopapereira/releaser/.github/workflows/get-assets-sha.yml@main
     with:
       toolName: tool1
       repo: ${{ github.event.client_payload.repo }}
