@@ -97,6 +97,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: process-release-information
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Download ytt data values file with release information
         uses: actions/download-artifact@v2
         with:
