@@ -31,7 +31,7 @@ jobs:
             
             checksums = {}
             for (const r of releases["data"]) {
-              if (r.draft && `${r.tag_name}` == "${{ context.payload.client_payload.tagName }}") {
+              if (r.draft && `${r.tag_name}` == "${ context.payload.client_payload.tagName }") {
                 for (const asset of r.assets) {
                   var release_asset = await github.repos.getReleaseAsset({ headers: {accept: `application/octet-stream`}, accept: `application/octet-stream`, owner: owner, repo: repo, asset_id: asset.id });
                   const hash = crypto.createHash('sha256');
