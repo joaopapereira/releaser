@@ -57,7 +57,7 @@ jobs:
             result = `
             #@data/values
             ---
-            version: v${version}
+            version: ${context.payload.client_payload.tagName}
             github:
               url: ${githubURL}
             assets:
