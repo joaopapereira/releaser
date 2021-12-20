@@ -1,0 +1,98 @@
+on:
+  workflow_call:
+    inputs:
+      toolName:
+        required: true
+        type: string
+      owner:
+        required: true
+        type: string
+      repo:
+        required: true
+        type: string
+      tagName:
+        required: true
+        type: string
+#    secrets:
+#      GITHUB_TOKEN:
+#        required: true
+    outputs:
+      yttReleaseValues:
+        description: "ytt values file content"
+        value: ${{ jobs.get_assets_sha.outputs.result }}
+jobs:
+  get_assets_sha:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/github-script@v4
+        id: get-checksums-from-draft-release
+        if: startsWith(github.ref, 'refs/tags/') && ${{ !env.ACT }}
+        with:
+#          github-token: ${{secrets.GITHUB_TOKEN}}
+          result-encoding: string
+          script: |
+            var crypto = require('crypto');
+            const { owner, repo } = context.repo;
+            
+            // https://docs.github.com/en/rest/reference/repos#list-releases
+            // https://octokit.github.io/rest.js/v18#repos-list-releases
+            var releases = await github.repos.listReleases({
+              owner: inputs.owner,
+              repo: inputs.repo
+            });
+            
+            var crypto = require('crypto')
+            var fs = require('fs')
+            const url = require('url');
+            const https = require('https');
+            
+            checksums = {}
+            for (const r of releases["data"]) {
+              if (r.draft && `${r.tag_name}` == "${{ tagName }}") {
+                for (const asset of r.assets) {
+                  var release_asset = await github.repos.getReleaseAsset({ headers: {accept: `application/octet-stream`}, accept: `application/octet-stream`, owner: inputs.owner, repo: inputs.repo, asset_id: asset.id });
+                  const hash = crypto.createHash('sha256');
+            
+                  let http_promise = new Promise((resolve, reject) => {
+                    https.get(release_asset.url, (stream) => {
+                      stream.on('data', function (data) {
+                        hash.update(data);
+                      });
+                      stream.on('end', function () {
+                        checksums[asset.name]= hash.digest('hex');
+                        resolve(`${asset.name}`);
+                      });
+                    });
+                  });
+                  await http_promise;
+                }
+              }
+            }
+            console.log(checksums)
+            
+            githubURL = `github.com/${inputs.owner}/${inputs.repo}`
+            result = `
+            #@data/values
+            ---
+            version: v${version}
+            github:
+              url: ${githubURL}
+            assets:
+            `
+              
+            for (const [key, value] of Object.entries(checksums)) {
+              if (key.indexOf(toolName) != -1) {
+              keyParts = key.split("-")
+              result += `
+              - os: ${keyParts[1]}
+                arch: ${keyParts[2]}
+                shasum: ${value}
+                filename: ${key}
+              `
+              }
+            }
+            
+            console.log(result)
+            
+            return result
