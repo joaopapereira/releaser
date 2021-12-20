@@ -88,7 +88,12 @@ jobs:
     steps:
       - name: Publish
         run: |
-          echo ${{ needs.process-release-information.outputs.yttValuesFile }}
           echo ${{ github.event.client_payload.tagName }}
           echo ${{ github.event.client_payload.owner }}
           echo ${{ github.event.client_payload.repo }}
+          cat <<EOF >release.yml
+          ${{ needs.process-release-information.outputs.yttValuesFile }}
+          EOF
+          
+          cat release.yml
+          
