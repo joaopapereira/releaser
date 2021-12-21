@@ -33,7 +33,7 @@ install() {
 
   (@ for val in data.values.products: @)
   echo "Installing (@= val.product @)..."
-  $dl_bin (@= val.github.url@))/releases/download/(@= val.version @)/(@= val.product @))-${binary_type} > /tmp/(@= val.product @)
+  $dl_bin (@= val.github.url@)/releases/download/(@= val.version @)/(@= val.product @)-${binary_type} > /tmp/(@= val.product @)
   echo "${(@= val.product @)_checksum}  /tmp/(@= val.product @)" | shasum -c -
   mv /tmp/(@= val.product @) ${dst_dir}/(@= val.product @)
   chmod +x ${dst_dir}/(@= val.product @)

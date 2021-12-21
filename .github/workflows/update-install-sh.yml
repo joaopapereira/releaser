@@ -35,6 +35,6 @@ jobs:
       authorName: joaopapereira
       authorEmail: joaod@vmware.com
       repository: joaopapereira/carvel
-      branch: main
+      branch: develop
       artifactName: new-install-sh
       artifactPath: ./site/static/
