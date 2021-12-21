@@ -159,8 +159,8 @@ jobs:
       - name: Generate new releases.yaml
         run: |
           ytt -f ./tmp/release.yml -f releases.yaml -f scripts/releases/overlay.yaml > ./tmp/releases.yml
-          diff ./tmp/releases.yml releases.yml
-          cp ./tmp/releases.yml releases.yml
+          diff ./tmp/releases.yml releases.yaml
+          cp ./tmp/releases.yml releases.yaml
       - name: Commit & Push changes
         env:
           AUTHOR_NAME: k8slt
