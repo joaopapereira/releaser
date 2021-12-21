@@ -29,7 +29,9 @@ on:
         default: .
     secrets:
       githubToken:
+        required: false
       githubDeployPrivateKey:
+        required: false
     outputs:
       yttReleaseValues:
         description: "ytt values file content"
