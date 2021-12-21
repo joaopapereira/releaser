@@ -129,7 +129,7 @@ jobs:
       authorName: joaopapereira
       authorEmail: joaod@vmware.com
       repository: joaopapereira/homebrew-carvel
-      branch: main
+      branch: develop
       artifactName: homebrew-formula
       artifactPath: .
 

@@ -47,7 +47,7 @@ jobs:
           ref: ${{ inputs.branch }}
           persist-credentials: false
           repository: ${{ inputs.repository }}
-      - name: Download updated homebrew formula
+      - name: Download artifacts to be added to the repository
         uses: actions/download-artifact@v2
         with:
           name: ${{ inputs.artifactName }}
