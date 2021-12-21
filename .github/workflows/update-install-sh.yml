@@ -27,27 +27,14 @@ jobs:
           name: new-install-sh
           path: install.sh
   update-install-sh:
-    runs-on: ubuntu-latest
     needs: generate-new-install-sh
-    environment: production
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          persist-credentials: false
-          repository: vmware-tanzu/carvel
-          ref: develop
-      - name: Download updated install.sh
-        uses: actions/download-artifact@v2
-        with:
-          name: new-install-sh
-          path: ./site/static/
-      - name: Commit and Push new install.sh
-        uses: joaopapereira/releaser/.github/workflows/commit-and-push.yml@main
-        secrets:
-          githubToken: ${{ secrets.ACCESS_TOKEN }}
-        with:
-          authorName: joaopapereira
-          authorEmail: joaod@vmware.com
-          repository: joaopapereira/releaser
-          branch: main
+    uses: joaopapereira/releaser/.github/workflows/commit-and-push.yml@main
+    secrets:
+      githubToken: ${{ secrets.ACCESS_TOKEN }}
+    with:
+      authorName: joaopapereira
+      authorEmail: joaod@vmware.com
+      repository: joaopapereira/carvel
+      branch: main
+      artifact: new-install-sh
+      artifactPath: ./site/static/
