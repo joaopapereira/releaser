@@ -165,7 +165,7 @@ jobs:
         env:
           AUTHOR_NAME: k8slt
           AUTHOR_EMAIL: klt@groups.vmware.com
-          REPOSITORY: vmware-tanzu/homebrew-carvel
+          REPOSITORY: joaopapereira/releaser
           BRANCH: develop
           FORCE: false
           GITHUB_TOKEN: ${{ secrets.HOMEBREW_TOKEN }}
