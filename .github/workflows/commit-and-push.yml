@@ -40,6 +40,7 @@ on:
 jobs:
   commit-and-push:
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: Checkout
         uses: actions/checkout@v2
