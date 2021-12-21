@@ -21,17 +21,17 @@ install() {
 
   if [[ `uname` == Darwin ]]; then
     binary_type=darwin-amd64
-    (@ for val in data.values: @)(@ for asset in val.assets: @)(@ if asset.os == "darwin" and asset.arch=="amd64": @)
+    (@ for val in data.values.products: @)(@ for asset in val.assets: @)(@ if asset.os == "darwin" and asset.arch=="amd64": @)
     (@=val.product @)_checksum=(@=asset.shasum @)(@ end @)(@ end @)(@ end @)
   else
     binary_type=linux-amd64
-    (@ for val in data.values: @)(@ for asset in val.assets: @)(@ if asset.os == "linux" and asset.arch=="amd64": @)
+    (@ for val in data.values.products: @)(@ for asset in val.assets: @)(@ if asset.os == "linux" and asset.arch=="amd64": @)
     (@=val.product @)_checksum=(@=asset.shasum @)(@ end @)(@ end @)(@ end @)
   fi
 
   echo "Installing ${binary_type} binaries..."
 
-  (@ for val in data.values: @)
+  (@ for val in data.values.products: @)
   echo "Installing (@= val.product @)..."
   $dl_bin (@= val.github.url@))/releases/download/(@= val.version @)/(@= val.product @))-${binary_type} > /tmp/(@= val.product @)
   echo "${(@= val.product @)_checksum}  /tmp/(@= val.product @)" | shasum -c -
