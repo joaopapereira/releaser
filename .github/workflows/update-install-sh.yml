@@ -5,7 +5,7 @@ on:
     paths:
       - releases.yaml
 jobs:
-  update-install-sh:
+  generate-new-install-sh:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -17,6 +17,37 @@ jobs:
         with:
           only: ytt
       - run: |
-          echo "bamm"
           ytt --data-values-file releases.yaml -f scripts/install_sh/install.sh.txt --output-files tmp
           cat tmp/install.sh.txt
+          mv tmp/install.sh.txt install.sh
+          chmod u+x install.sh
+      - name: Upload install.sh
+        uses: actions/upload-artifact@v2
+        with:
+          name: new-install-sh
+          path: install.sh
+  update-install-sh:
+    runs-on: ubuntu-latest
+    needs: generate-new-install-sh
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          repository: vmware-tanzu/carvel
+          ref: develop
+      - name: Download updated install.sh
+        uses: actions/download-artifact@v2
+        with:
+          name: new-install-sh
+          path: ./site/static/
+      - name: Commit and Push new install.sh
+        uses: joaopapereira/releaser/.github/workflows/commit-and-push.yml@main
+        secrets:
+          githubToken: ${{ secrets.ACCESS_TOKEN }}
+        with:
+          authorName: joaopapereira
+          authorEmail: joaod@vmware.com
+          repository: joaopapereira/releaser
+          branch: main
