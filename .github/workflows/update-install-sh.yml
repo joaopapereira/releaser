@@ -36,5 +36,5 @@ jobs:
       authorEmail: joaod@vmware.com
       repository: joaopapereira/carvel
       branch: main
-      artifact: new-install-sh
+      artifactName: new-install-sh
       artifactPath: ./site/static/

@@ -130,7 +130,7 @@ jobs:
       authorEmail: joaod@vmware.com
       repository: joaopapereira/homebrew-carvel
       branch: main
-      artifact: homebrew-formula
+      artifactName: homebrew-formula
       artifactPath: .
 
 
@@ -171,5 +171,5 @@ jobs:
       authorEmail: joaod@vmware.com
       repository: joaopapereira/releaser
       branch: main
-      artifact: releases-yaml
+      artifactName: releases-yaml
       artifactPath: .
