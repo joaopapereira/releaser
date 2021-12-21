@@ -138,3 +138,45 @@ jobs:
         run: |
           filename="./${{ github.event.client_payload.toolName }}.rb"
           cat $filename
+
+  prepare-install-sh:
+    runs-on: ubuntu-latest
+    needs: process-release-information
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Download ytt data values file with release information
+        uses: actions/download-artifact@v2
+        with:
+          name: ytt-data-values-for-release
+          path: ./tmp/release.yml
+      - name: Checkout website repository
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          repository: vmware-tanzu/carvel
+          path: carvel
+          ref: develop
+      - name: generate install.sh
+        run: |
+          set -e -x
+          
+          ./scripts/generate_install_sh.sh ${{ github.event.client_payload.toolName }} ./carvel/site/static/install.sh > ./install.sh
+          
+          cat ./install.sh
+      - name: Generate Homebrew File
+        run: |
+          set -e -x
+          curl -L https://carvel.dev/install.sh | bash
+          filename="./${{ github.event.client_payload.toolName }}.rb"
+          
+          ./scripts/generate_homebrew_formula.sh ./tmp/release.yml > $filename
+          
+          cat $filename
+      - name: Upload Homebrew File
+        uses: actions/upload-artifact@v2
+        with:
+          name: homebrew-formula
+          path: ./${{ github.event.client_payload.toolName }}.rb
